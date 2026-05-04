@@ -71,7 +71,7 @@ resultButton.addEventListener('click', () => {
     }
 
     operationDisplay.textContent += ` ${state.secondNumber} =`;
-    state.currentInput = String(result);
+    state.currentInput = Number(result.toFixed(12)).toString();
     inputDisplay.textContent = state.currentInput;
     state.operator = null;
     state.firstNumber = null;
