@@ -8,10 +8,11 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 80vh;
 }
 
 .display {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     width: min(320px, 80vw);
