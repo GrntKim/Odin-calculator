@@ -26,6 +26,12 @@ body {
     border-radius: 5px;
 }
 
+.calc-btn:hover {
+    filter: brightness(90%);
+    transform: translateY(1px);
+
+}
+
 .calc-btn--number {
     background-color: white;
 }
