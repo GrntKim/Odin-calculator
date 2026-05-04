@@ -11,6 +11,21 @@ body {
     min-height: 100vh;
 }
 
+.display {
+    display: flex;
+    flex-direction: column;
+    width: min(320px, 80vw);
+    margin-bottom: 8px;
+    gap: 8px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.display-panel {
+    box-sizing: border-box;
+    min-height: 48px;
+}
+
 .numberpad {
     --gap: 8px;
     display: flex;
@@ -24,12 +39,18 @@ body {
     flex: 0 0 calc((100% - (var(--gap) * 3)) / 4);
     aspect-ratio: 1 / 1;
     border-radius: 5px;
+    font-size: x-large;
+    border: 2px solid black;
 }
 
 .calc-btn:hover {
     filter: brightness(90%);
-    transform: translateY(1px);
+}
 
+.calc-btn:active {
+    border: 1px solid lightgray;
+    filter: brightness(90%);
+    transform: translateY(2px);
 }
 
 .calc-btn--number {
