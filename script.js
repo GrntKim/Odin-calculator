@@ -1,6 +1,10 @@
-let num1 = null;
-let num2 = null;
-let result = null;
+const state = {
+    firstNumber: null,
+    operator: null,
+    secondNumber: null,
+    currentInput: "",
+    result: null,
+};
 
 const operationButtons = document.querySelectorAll('.calc-btn--operator');
 operationButtons.forEach((button) => {

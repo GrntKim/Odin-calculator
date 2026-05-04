@@ -24,7 +24,7 @@ body {
 
 .display-panel {
     box-sizing: border-box;
-    min-height: 48px;
+    min-height: 32px;
 }
 
 .numberpad {
