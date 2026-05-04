@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.numberpad {
+    --gap: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
+    width: min(320px, 80vw);
+}
+
+.numberpad button {
+    box-sizing: border-box;
+    flex: 0 0 calc((100% - (var(--gap) * 3)) / 4);
+    aspect-ratio: 1 / 1;
+    border-radius: 5px;
+}
+
+#btn-res {
+    flex-grow: 1;
+    aspect-ratio: auto;
+}
