@@ -19,14 +19,27 @@ body {
     width: min(320px, 80vw);
 }
 
-.numberpad button {
+.calc-btn {
     box-sizing: border-box;
     flex: 0 0 calc((100% - (var(--gap) * 3)) / 4);
     aspect-ratio: 1 / 1;
     border-radius: 5px;
 }
 
-#btn-res {
+.calc-btn--number {
+    background-color: white;
+}
+
+.calc-btn--operator {
+    background-color: orange;
+}
+
+.calc-btn--control {
+    background-color: lightgray;
+}
+
+.calc-btn--result {
     flex-grow: 1;
     aspect-ratio: auto;
+    background-color: orange;
 }

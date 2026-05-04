@@ -10,31 +10,33 @@
     <div class="display">
 
     </div>
+
     <div class="numberpad">
-        <button id="btn-ac">AC</button>
-        <button id="btn-clear">C</button>
-        <button id="btn-flip">+/-</button>
-        <button id="btn-div">÷</button>
+    <button class="calc-btn calc-btn--control" data-action="clear-all">AC</button>
+    <button class="calc-btn calc-btn--control" data-action="clear">C</button>
+    <button class="calc-btn calc-btn--control" data-action="flip">+/-</button>
+    <button class="calc-btn calc-btn--operator" data-action="divide">÷</button>
 
-        <button id="btn-one">1</button>
-        <button id="btn-two">2</button>
-        <button id="btn-three">3</button>
-        <button id="btn-mul">×</button>
+    <button class="calc-btn calc-btn--number" data-value="1">1</button>
+    <button class="calc-btn calc-btn--number" data-value="2">2</button>
+    <button class="calc-btn calc-btn--number" data-value="3">3</button>
+    <button class="calc-btn calc-btn--operator" data-action="multiply">×</button>
 
-        <button id="btn-four">4</button>
-        <button id="btn-five">5</button>
-        <button id="btn-six">6</button>
-        <button id="btn-sum">+</button>
+    <button class="calc-btn calc-btn--number" data-value="4">4</button>
+    <button class="calc-btn calc-btn--number" data-value="5">5</button>
+    <button class="calc-btn calc-btn--number" data-value="6">6</button>
+    <button class="calc-btn calc-btn--operator" data-action="add">+</button>
 
-        <button class="btn-seven">7</button>
-        <button class="btn-eight">8</button>
-        <button class="number-nine">9</button>
-        <button id="btn-sub">-</button>
+    <button class="calc-btn calc-btn--number" data-value="7">7</button>
+    <button class="calc-btn calc-btn--number" data-value="8">8</button>
+    <button class="calc-btn calc-btn--number" data-value="9">9</button>
+    <button class="calc-btn calc-btn--operator" data-action="subtract">-</button>
 
-        <button id="btn-dec">.</button>
-        <button class="number-zero">0</button>
-        <button id="btn-res">=</button>
-    </div>
+    <button class="calc-btn calc-btn--decimal" data-action="decimal">.</button>
+    <button class="calc-btn calc-btn--number" data-value="0">0</button>
+    <button class="calc-btn calc-btn--result" data-action="calculate">=</button>
+</div>
+
     <script src="script.js"></script>
 </body>
 </html>
