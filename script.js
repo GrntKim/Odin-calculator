@@ -46,36 +46,55 @@ numberButtons.forEach((button) => {
     });
 });
 
+const operate = (op, a, b) => {
+    const num1 = Number(a)
+    const num2 = Number(b);
+    if (op === "add") {
+        return add(num1, num2);
+    } else if (op === "subtract") {
+        return subtract(num1, num2);
+    } else if (op === "multiply") {
+        return multiply(num1, num2);
+    } else if (op === "divide") {
+        return divide(num1, num2);
+    }
+};
+
+function add(num1, num2) {
+    return num1 + num2;
+}
+
+function subtract(num1, num2) {
+    return num1 - num2;
+}
+
+function multiply(num1, num2) {
+    return num1 * num2;
+}
+
+function divide(num1, num2) {
+    if (num2 === 0) throw new Error("Cannot divide by zero");
+    return num1 / num2;
+}
+
 const resultButton = document.querySelector('.calc-btn--result');
 resultButton.addEventListener('click', () => {
     if (state.shouldResetInputDisplay) return;
 
     state.secondNumber = Number (state.currentInput);
-    const op = state.operator;
-
     let result;
-
-    if (op === "add") {
-        result = state.firstNumber + state.secondNumber;
-    } else if (op === "subtract") {
-        result = state.firstNumber - state.secondNumber;
-    } else if (op === "multiply") {
-        result = state.firstNumber * state.secondNumber;
-    } else if (op === "divide") {
-        if (state.secondNumber === 0) {
-            operationDisplay.textContent = "DIVISION BY ZERO";
-            return;
-        } else {
-            result = state.firstNumber / state.secondNumber;
-        }
+    try {
+        result = Number(operate(state.operator, state.firstNumber, state.secondNumber).toFixed(12));
+        operationDisplay.textContent += ` ${state.secondNumber} =`;
+        state.currentInput = result.toString();
+        inputDisplay.textContent = state.currentInput;
+        state.operator = null;
+        state.firstNumber = null;
+        state.secondNumber = null;
+        state.shouldResetOperationDisplay = true;
+    } catch (error) {
+        operationDisplay.textContent = error.message;
     }
 
-    operationDisplay.textContent += ` ${state.secondNumber} =`;
-    state.currentInput = Number(result.toFixed(12)).toString();
-    inputDisplay.textContent = state.currentInput;
-    state.operator = null;
-    state.firstNumber = null;
-    state.secondNumber = null;
-    state.shouldResetOperationDisplay = true;
     console.log(state);
 });
