@@ -55,34 +55,42 @@ function updateDisplay() {
     inputDisplay.textContent = state.inputText;
 }
 
+function syncNumber() {
+    state.isAlreadyDecimal = state.inputText.includes(".");
+    const value = state.inputText === "" ? null : Number(state.inputText);
+    if (state.inputTarget === "first") {
+        state.firstNumber = value;
+    } else {
+        state.secondNumber = value;
+    }
+}
+
 function numberButton(value) {
     if (state.shouldResetInput) {
         state.inputText = "";
         state.shouldResetInput = false;
+        state.isAlreadyDecimal = false;
+    }
+
+    if (value === ".") {
+        if (state.isAlreadyDecimal) return;
+        if (state.inputText === "") state.inputText = "0";
     }
 
     state.inputText += value;
-    if (state.inputTarget === "first") {
-        state.firstNumber = Number(state.inputText);
-    } else {
-        state.secondNumber = Number(state.inputText);
-    }
+    syncNumber();
 }
 
 function flipButton() {
     if (state.inputText === "") return;
     state.inputText = (-Number(state.inputText)).toString();
-    if (state.inputTarget === "first") {
-        state.firstNumber = Number(state.inputText);
-    } else {
-        state.secondNumber = Number(state.inputText);
-    }
+    syncNumber();
 }
 
 function backspaceButton() {
     if (state.inputText === "") return;
     state.inputText = state.inputText.slice(0, -1);
-    state.isAlreadyDecimal = state.inputText.includes(".");
+    syncNumber();
 }
 
 function handleError(error) {
@@ -108,7 +116,7 @@ function handleOperatorButton(action, symbol) {
 function calculate() {
     if (state.firstNumber === null ||
         state.operator === null ||
-        state.inputText === "")
+        state.secondNumber === null)
         return;
     
     try {
