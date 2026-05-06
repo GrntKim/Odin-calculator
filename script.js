@@ -72,6 +72,11 @@ function numberButton(value) {
 function flipButton() {
     if (state.inputText === "") return;
     state.inputText = (-Number(state.inputText)).toString();
+    if (state.inputTarget === "first") {
+        state.firstNumber = Number(state.inputText);
+    } else {
+        state.secondNumber = Number(state.inputText);
+    }
 }
 
 function backspaceButton() {
