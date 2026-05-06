@@ -6,6 +6,7 @@ const state = {
     secondNumber: null,
     inputText: "",
     operationText: "",
+    inputTarget: "first",
 
     // conditions
     isAlreadyDecimal: false,
@@ -20,6 +21,7 @@ function clearCalculator() {
     state.secondNumber = null;
     state.inputText = "";
     state.operationText = "";
+    state.inputTarget = "first";
     state.isAlreadyDecimal = false;
     state.shouldResetInput = false;
     state.shouldResetAll = false;
@@ -39,8 +41,6 @@ const divide = (x, y) => {
 }
 
 const operate = (op, x, y) => {
-    if (op === null || x == null || y === null) return;
-
     let res;
     if (op === "add") res = add(x, y);
     else if (op === "subtract") res = subtract(x, y);
@@ -60,17 +60,13 @@ function numberButton(value) {
         state.inputText = "";
         state.shouldResetInput = false;
     }
-    if (isInputZero(state.inputText) && state.isAlreadyDecimal === false) 
-        state.inputText = "";
-         
-    state.inputText += value;
-}
 
-function decimalButton() {
-    if (state.isAlreadyDecimal) return;
-    if (state.inputText === "" || isInputZero(state.inputText)) state.inputText = "0";
-    state.inputText += ".";
-    state.isAlreadyDecimal = true;
+    state.inputText += value;
+    if (state.inputTarget === "first") {
+        state.firstNumber = Number(state.inputText);
+    } else {
+        state.secondNumber = Number(state.inputText);
+    }
 }
 
 function flipButton() {
@@ -91,10 +87,13 @@ function handleError(error) {
 }
 
 function handleOperatorButton(action, symbol) {
-    if (state.inputText === "") return;
+    if (state.firstNumber === null) return;
 
-    state.firstNumber = Number(state.inputText);
-    state.isAlreadyDecimal = false;
+    if (state.secondNumber !== null) {
+        calculate();
+    }
+
+    state.inputTarget = "second";
     state.operator = action;
     state.shouldResetInput = true;
     state.operatorSymbol = symbol;
@@ -107,22 +106,20 @@ function calculate() {
         state.inputText === "")
         return;
     
-    state.secondNumber = Number(state.inputText);
     try {
         const result = operate(
             state.operator, 
             state.firstNumber, 
             state.secondNumber
         );
-        state.operationText = "";
         state.operationText = `${state.firstNumber} ${state.operatorSymbol} ${state.secondNumber} =`
         state.inputText = formattedResult(result);
-        state.firstNumber = null;
-        state.operator = null;
-        state.operatorSymbol = null;
+        state.inputTarget = "first";
+        state.firstNumber = Number(formattedResult(result));
         state.secondNumber = null;
         state.shouldResetInput = true;
-        state.isAlreadyDecimal = state.inputText.includes(".");
+        state.operator = null;
+        state.operatorSymbol = null;
     } catch (error) {
         handleError(error);
     }
@@ -147,8 +144,6 @@ document.querySelectorAll('.calc-btn').forEach((button) => {
             clearCalculator();
         } else if (action === "clear") {
             backspaceButton();
-        } else if (action === "decimal") {
-            decimalButton();
         } else if (action === "flip") {
             flipButton();
         }
