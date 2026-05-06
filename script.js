@@ -1,100 +1,158 @@
 const state = {
+    // values
     firstNumber: null,
     operator: null,
+    operatorSymbol: null,
     secondNumber: null,
-    currentInput: "",
-    shouldResetInputDisplay: false,
-    shouldResetOperationDisplay: false,
+    inputText: "",
+    operationText: "",
+
+    // conditions
+    isAlreadyDecimal: false,
+    shouldResetInput: false,
+    shouldResetAll: false,
 };
+
+function clearCalculator() {
+    state.firstNumber = null;
+    state.operator = null;
+    state.operatorSymbol = null;
+    state.secondNumber = null;
+    state.inputText = "";
+    state.operationText = "";
+    state.isAlreadyDecimal = false;
+    state.shouldResetInput = false;
+    state.shouldResetAll = false;
+}
 
 const operationDisplay = document.querySelector('.display-panel--operation');
 const inputDisplay = document.querySelector('.display-panel--input');
+const isOperator = (action) => ["add", "subtract", "multiply", "divide"].includes(action);
+const isInputZero = (input) => Number(input) === 0;
 
-const operationButtons = document.querySelectorAll('.calc-btn--operator');
-operationButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-        state.shouldResetOperationDisplay = false;
-        if (state.currentInput === "") return;
-        state.firstNumber = Number(state.currentInput);
-        state.operator = button.dataset.action;
-        state.currentInput = "";
-        operationDisplay.textContent = `${state.firstNumber} ${button.textContent}`;
-        state.shouldResetInputDisplay = true;
-        console.log(state);
-    });
-});
+const add = (x, y) => x + y;
+const subtract = (x, y) => x - y;
+const multiply = (x, y) => x * y;
+const divide = (x, y) => {
+    if (y === 0) throw new Error("Cannot divide by zero");
+    return x / y;
+}
 
-const controlButtons = document.querySelectorAll('.calc-btn--control');
-controlButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-    });
-});
+const operate = (op, x, y) => {
+    if (op === null || x == null || y === null) return;
 
-const numberButtons = document.querySelectorAll('.calc-btn--number');
-numberButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-        if(state.shouldResetInputDisplay) {
-            inputDisplay.textContent = "";
-            state.shouldResetInputDisplay = false;
-        }
-        if(state.shouldResetOperationDisplay) {
-            operationDisplay.textContent = "";
-            state.shouldResetOperationDisplay = false;
-        }
-        state.currentInput += button.dataset.value;
-        inputDisplay.textContent += button.dataset.value;
-    });
-});
+    let res;
+    if (op === "add") res = add(x, y);
+    else if (op === "subtract") res = subtract(x, y);
+    else if (op === "multiply") res = multiply(x, y);
+    else if (op === "divide") res = divide(x, y);
+    return res;
+}
+const formattedResult = (result) => Number(result.toFixed(12)).toString();
 
-const operate = (op, a, b) => {
-    const num1 = Number(a)
-    const num2 = Number(b);
-    if (op === "add") {
-        return add(num1, num2);
-    } else if (op === "subtract") {
-        return subtract(num1, num2);
-    } else if (op === "multiply") {
-        return multiply(num1, num2);
-    } else if (op === "divide") {
-        return divide(num1, num2);
+function updateDisplay() {
+    operationDisplay.textContent = state.operationText;
+    inputDisplay.textContent = state.inputText;
+}
+
+function numberButton(value) {
+    if (state.shouldResetInput) {
+        state.inputText = "";
+        state.shouldResetInput = false;
     }
-};
-
-function add(num1, num2) {
-    return num1 + num2;
+    if (isInputZero(state.inputText) && state.isAlreadyDecimal === false) 
+        state.inputText = "";
+         
+    state.inputText += value;
 }
 
-function subtract(num1, num2) {
-    return num1 - num2;
+function decimalButton() {
+    if (state.isAlreadyDecimal) return;
+    if (state.inputText === "" || isInputZero(state.inputText)) state.inputText = "0";
+    state.inputText += ".";
+    state.isAlreadyDecimal = true;
 }
 
-function multiply(num1, num2) {
-    return num1 * num2;
+function flipButton() {
+    if (state.inputText === "") return;
+    state.inputText = (-Number(state.inputText)).toString();
 }
 
-function divide(num1, num2) {
-    if (num2 === 0) throw new Error("Cannot divide by zero");
-    return num1 / num2;
+function backspaceButton() {
+    if (state.inputText === "") return;
+    state.inputText = state.inputText.slice(0, -1);
+    state.isAlreadyDecimal = state.inputText.includes(".");
 }
 
-const resultButton = document.querySelector('.calc-btn--result');
-resultButton.addEventListener('click', () => {
-    if (state.shouldResetInputDisplay) return;
+function handleError(error) {
+    state.operationText = `Error: ${error.message}`;
+    state.inputText = "Please Clear the calculator.";
+    state.shouldResetAll = true;
+}
 
-    state.secondNumber = Number (state.currentInput);
-    let result;
+function handleOperatorButton(action, symbol) {
+    if (state.inputText === "") return;
+
+    state.firstNumber = Number(state.inputText);
+    state.isAlreadyDecimal = false;
+    state.operator = action;
+    state.shouldResetInput = true;
+    state.operatorSymbol = symbol;
+    state.operationText = `${state.firstNumber} ${state.operatorSymbol}`
+}
+
+function calculate() {
+    if (state.firstNumber === null ||
+        state.operator === null ||
+        state.inputText === "")
+        return;
+    
+    state.secondNumber = Number(state.inputText);
     try {
-        result = Number(operate(state.operator, state.firstNumber, state.secondNumber).toFixed(12));
-        operationDisplay.textContent += ` ${state.secondNumber} =`;
-        state.currentInput = result.toString();
-        inputDisplay.textContent = state.currentInput;
-        state.operator = null;
+        const result = operate(
+            state.operator, 
+            state.firstNumber, 
+            state.secondNumber
+        );
+        state.operationText = "";
+        state.operationText = `${state.firstNumber} ${state.operatorSymbol} ${state.secondNumber} =`
+        state.inputText = formattedResult(result);
         state.firstNumber = null;
+        state.operator = null;
+        state.operatorSymbol = null;
         state.secondNumber = null;
-        state.shouldResetOperationDisplay = true;
+        state.shouldResetInput = true;
+        state.isAlreadyDecimal = state.inputText.includes(".");
     } catch (error) {
-        operationDisplay.textContent = error.message;
+        handleError(error);
     }
+}
 
-    console.log(state);
+document.querySelectorAll('.calc-btn').forEach((button) => {
+    button.addEventListener('click', () => {
+        const value = button.dataset.value;
+        const action = button.dataset.action;
+
+        if (state.shouldResetAll && action !== "clear-all") {
+            return;
+        }
+
+        if (value !== undefined) {
+            numberButton(value);
+        } else if (isOperator(action)) {
+            handleOperatorButton(action, button.textContent);
+        } else if (action === "calculate") {
+            calculate();
+        } else if (action === "clear-all") {
+            clearCalculator();
+        } else if (action === "clear") {
+            backspaceButton();
+        } else if (action === "decimal") {
+            decimalButton();
+        } else if (action === "flip") {
+            flipButton();
+        }
+
+        updateDisplay();
+    });
 });
