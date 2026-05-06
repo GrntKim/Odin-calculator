@@ -155,7 +155,7 @@ document.querySelectorAll('.calc-btn').forEach((button) => {
             calculate();
         } else if (action === "clear-all") {
             clearCalculator();
-        } else if (action === "clear") {
+        } else if (action === "backspace") {
             backspaceButton();
         } else if (action === "flip") {
             flipButton();
