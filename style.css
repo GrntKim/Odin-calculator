@@ -65,7 +65,7 @@ body {
     flex: 0 0 calc((100% - (var(--gap) * 3)) / 4);
     aspect-ratio: 1 / 1;
     border-radius: 5px;
-    font-size: x-large;
+    font-size: 32px;
     border: none;
 }
 
@@ -89,10 +89,4 @@ body {
 
 .calc-btn--control {
     background-color: lightgray;
-}
-
-.calc-btn--result {
-    flex-grow: 1;
-    aspect-ratio: auto;
-    background-color: orange;
 }
